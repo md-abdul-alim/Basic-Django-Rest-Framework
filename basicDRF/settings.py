@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'api_backend',
     'api_frontend',
+    'drf_1',
     'rest_framework',
 ]
 
