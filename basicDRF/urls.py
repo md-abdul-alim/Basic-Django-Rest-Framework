@@ -1,4 +1,4 @@
-"""DRF_AJAX URL Configuration
+"""basicDRF URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
@@ -18,6 +18,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
-    path('', include('frontend.urls')),
+    path('api/', include('api_backend.urls')),
+    path('', include('api_frontend.urls')),
 ]
