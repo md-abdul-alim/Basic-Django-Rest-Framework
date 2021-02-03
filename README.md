@@ -1,1 +1,1 @@
-# Django-Rest-Framework-Ajax
+# Basic-Django-Rest-Framework
