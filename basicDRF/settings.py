@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'api_backend',
-    'api_frontend',
+    'api_call_by_basic_js',
     'drf_1',
     'rest_framework',
 ]
