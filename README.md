@@ -1,2 +1,2 @@
 # Basic-Django-Rest-Framework
-To run api_call_by_react first open a console and run (python manage.py runserver). Then open another console inside api_call_by_react directory and run (npm start). Now use any of this web link to run the react app("http://localhost:3000","http://127.0.0.1:3000","http://192.168.0.107:3000")
+First open a console and run (python manage.py runserver).Use (http://127.0.0.1:8000) port to run this project by basic html,css,js.To run api_call_by_react open another console inside api_call_by_react directory and run (npm start). Now use any of these ports to run the react app("http://localhost:3000","http://127.0.0.1:3000","http://192.168.0.107:3000")
