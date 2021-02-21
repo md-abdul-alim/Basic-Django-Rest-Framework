@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api_backend.urls')),
-    path('', include('api_call_by_basic_js.urls')),
+    path('js/', include('api_call_by_basic_js.urls')),
+    path('react/', TemplateView.as_view(template_name='index.html')),
     path('api-auth/', include('rest_framework.urls')),
     path('drf_1/', include('drf_1.urls')),
 ]
