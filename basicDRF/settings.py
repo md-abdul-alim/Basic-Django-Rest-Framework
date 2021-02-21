@@ -62,7 +62,7 @@ ROOT_URLCONF = 'basicDRF.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'api_call_by_react/build'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -126,6 +126,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'api_call_by_react/build/static'
+]
 
 # ip this is for running app by react frontend call
 CORS_ALLOWED_ORIGINS = [

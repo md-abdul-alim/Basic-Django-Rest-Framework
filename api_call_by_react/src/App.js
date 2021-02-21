@@ -98,7 +98,7 @@ class App extends React.Component {
     }).then((response)  => {
         this.fetchTasks()
         this.setState({
-           activeItem:{
+          activeItem:{
           id:null, 
           title:'',
           completed:false,
