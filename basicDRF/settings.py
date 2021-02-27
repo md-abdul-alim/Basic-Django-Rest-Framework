@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'api_backend',
     'api_call_by_basic_js',
     'drf_1',
+    'drf_from_doc',
     'rest_framework',
     # https://pypi.org/project/django-cors-headers/
     'corsheaders',
