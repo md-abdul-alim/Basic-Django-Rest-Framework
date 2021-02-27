@@ -1,0 +1,22 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "start",
+			"path": "api_call_by_react/",
+			"problemMatcher": [],
+			"label": "npm: start - api_call_by_react",
+			"detail": "react-scripts start"
+		},
+		{
+			"type": "npm",
+			"script": "build",
+			"path": "api_call_by_react/",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build - api_call_by_react",
+			"detail": "react-scripts build"
+		}
+	]
+}
