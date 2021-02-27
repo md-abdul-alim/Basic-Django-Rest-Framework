@@ -24,4 +24,5 @@ urlpatterns = [
     path('react/', TemplateView.as_view(template_name='index.html')),
     path('api-auth/', include('rest_framework.urls')),
     path('drf_1/', include('drf_1.urls')),
+    path('', include('drf_from_doc.urls')),
 ]
