@@ -2,15 +2,20 @@ from django.contrib.auth.models import Group, User
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import (generics, mixins, permissions, serializers, status,
-                            viewsets)
+from rest_framework import (generics, mixins, permissions, renderers,
+                            serializers, status, viewsets)
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework.views import APIView
+from rest_framework.request import Request
+from rest_framework.test import APIRequestFactory
 
 from .models import Snippet
-from .serializers import GroupSerializer, SnippetSerializer, UserSerializer
+from .permissions import IsOwnerOrReadOnly
+from .serializers import (GroupSerializer, QuickUserSerializer,
+                          SnippetSerializer, UserSerializer, HyperSnippetSerializer, HyperUserSerializer)
 
 # Create your views here.
 
@@ -20,7 +25,7 @@ class UserViewSet(viewsets.ModelViewSet):
     API endpoint that allows users to be viewed or edited.
     """
     queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
+    serializer_class = QuickUserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
@@ -97,6 +102,8 @@ class SnippetList(APIView):
     def get(self, request, format=None):
         snippets = Snippet.objects.all()
         serializer = SnippetSerializer(snippets, many=True)
+        permission_classes = [
+            permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -105,6 +112,9 @@ class SnippetList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class SnippetDetail(APIView):
@@ -121,6 +131,8 @@ class SnippetDetail(APIView):
     def get(self, request, pk, format=None):
         snippet = self.get_object(pk)
         serializer = SnippetSerializer(snippet)
+        permission_classes = [
+            permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
@@ -175,3 +187,103 @@ class GenericSnippetList(generics.ListCreateAPIView):
 class GenericSnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
+
+# Adding endpoints for our User models
+
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+# https://www.django-rest-framework.org/tutorial/5-relationships-and-hyperlinked-apis/
+
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'users': reverse('user-list', request=request, format=format),
+        'snippets': reverse('snippet-list', request=request, format=format)
+    })
+
+
+class SnippetHighlight(generics.GenericAPIView):
+    queryset = Snippet.objects.all()
+    renderer_classes = [renderers.StaticHTMLRenderer]
+
+    def get(self, request, *args, **kwargs):
+        snippet = self.get_object()
+        return Response(snippet.highlighted)
+
+
+factory = APIRequestFactory()
+request = factory.get('/')
+serializer_context = {
+        'request': Request(request),
+}
+class HyperSnippetList(APIView):
+    """
+    List all snippets, or create a new snippet.
+    """
+    def get(self, request, format=None):      
+        snippets = Snippet.objects.all()
+        serializer = HyperSnippetSerializer(instance=snippets, many=True, context=serializer_context)#https://stackoverflow.com/questions/48348267/django-rest-framework-queryset-object-has-no-attribute-pk
+        permission_classes = [
+            permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = HyperSnippetSerializer(data=request.data, many=True, context=serializer_context)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class HyperSnippetDetail(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+
+    def get_object(self, pk):
+        try:
+            return Snippet.objects.get(pk=pk)
+        except Snippet.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = HyperSnippetSerializer(instance=snippet, context=serializer_context)
+        permission_classes = [
+            permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = HyperSnippetSerializer(snippet, data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        snippet.delete()
+        return Response(status=status.status.HTTP_204_NO_CONTENT)
+
+
+class HyperUserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = HyperUserSerializer
+
+
+class HyperUserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = HyperUserSerializer
