@@ -25,8 +25,8 @@ SECRET_KEY = '9&@0tfmjls)=+170tn@=aorb)97%i0$v$tci^$%$v03l78xr_i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver',]
 
 # Application definition
 
@@ -40,7 +40,6 @@ INSTALLED_APPS = [
 
     'api_backend',
     'api_call_by_basic_js',
-    'drf_1',
     'drf_from_doc',
     'rest_framework',
     # https://pypi.org/project/django-cors-headers/
