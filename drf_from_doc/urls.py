@@ -12,4 +12,13 @@ urlpatterns = [
 
     path('snippets/', views.snippet_list),
     path('snippets/<int:pk>', views.snippet_detail),
+
+    path('class/snippets/', views.SnippetList.as_view()),
+    path('class/snippets/<int:pk>', views.SnippetDetail.as_view()),
+
+    path('mixins/class/snippets/', views.SnippetList.as_view()),
+    path('mixins/class/snippets/<int:pk>', views.SnippetDetail.as_view()),
+
+    path('generic/class/snippets/', views.SnippetList.as_view()),
+    path('generic/class/snippets/<int:pk>', views.SnippetDetail.as_view()),
 ]
