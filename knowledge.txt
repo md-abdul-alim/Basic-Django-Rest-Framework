@@ -1,0 +1,4 @@
+request.POST  # Only handles form data.  Only works for 'POST' method.
+request.data  # Handles arbitrary data.  Works for 'POST', 'PUT' and 'PATCH' methods.
+
+return Response(data)  # Renders to content type as requested by the client.
