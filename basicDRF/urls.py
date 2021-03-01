@@ -23,4 +23,5 @@ urlpatterns = [
     path('js/', include('api_call_by_basic_js.urls')),
     path('react/', TemplateView.as_view(template_name='index.html')),
     path('', include('drf_from_doc.urls')),
+    path('more/', include('drf_from_doc.urlsMore')),
 ]
