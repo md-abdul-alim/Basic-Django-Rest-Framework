@@ -28,8 +28,8 @@ user_detail_viewSet = views.UserViewSet.as_view({
 router = routers.DefaultRouter()
 router.register('users', views.QuickUserViewSet)
 router.register('groups', views.QuickGroupViewSet)
-router.register('usersViewSet', views.SnippetViewSet)
-router.register('snippetsViewSet', views.UserViewSet)
+router.register('snippetsViewSet', views.SnippetViewSet)
+router.register('usersViewSet', views.UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
