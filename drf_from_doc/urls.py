@@ -1,10 +1,35 @@
 from django.urls import include, path
 from rest_framework import routers
 from . import views
+from rest_framework import renderers
+
+# https://www.django-rest-framework.org/tutorial/6-viewsets-and-routers/
+# Binding ViewSets to URLs explicitly
+snippet_list_viewSet = views.SnippetViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+snippet_detail_viewSet = views.SnippetViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'patch': 'partial_update',
+    'delete': 'destroy'
+})
+snippet_highlight_viewSet = views.SnippetViewSet.as_view({
+    'get': 'highlight'
+}, renderer_classes=[renderers.StaticHTMLRenderer])
+user_list_viewSet = views.UserViewSet.as_view({
+    'get': 'list'
+})
+user_detail_viewSet = views.UserViewSet.as_view({
+    'get': 'retrieve'
+})
 
 router = routers.DefaultRouter()
 router.register('users', views.QuickUserViewSet)
 router.register('groups', views.QuickGroupViewSet)
+router.register('usersViewSet', views.SnippetViewSet)
+router.register('snippetsViewSet', views.UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
