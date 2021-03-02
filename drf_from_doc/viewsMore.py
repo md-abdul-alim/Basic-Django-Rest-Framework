@@ -1,9 +1,10 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import authentication, permissions
 from django.contrib.auth.models import User
-from rest_framework.decorators import api_view, throttle_classes
+from rest_framework import authentication, permissions
+from rest_framework.decorators import api_view, schema, throttle_classes
+from rest_framework.response import Response
+from rest_framework.schemas import AutoSchema
 from rest_framework.throttling import UserRateThrottle
+from rest_framework.views import APIView
 
 
 # https://www.django-rest-framework.org/api-guide/views/#class-based-views
@@ -96,3 +97,23 @@ def throttle_example_view(request, format=None):
         'status': 'request was permitted throttle_example_view'
     }
     return Response(content)
+
+# View schema decorator
+# here schema will also use settings throttling timing
+
+
+class CustomAutoSchema(AutoSchema):
+    def get_link(self, path, method, base_url):
+        # override view introspection here...
+        pass
+
+
+@api_view(['GET'])
+@schema(CustomAutoSchema())
+def viewSchema(request):
+    return Response({"message": "Hello for today! See you tomorrow!"})
+
+@api_view(['GET'])
+@schema(None)
+def viewSchemaNone(request):
+    return Response({"message": "Will not appear in schema!"})
