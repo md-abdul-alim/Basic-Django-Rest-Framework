@@ -139,6 +139,11 @@ CORS_ALLOWED_ORIGINS = [
 ]
 # drf_from_doc
 REST_FRAMEWORK = {
+    """
+    pagination_class - The pagination class that should be used when paginating list results.
+    Defaults to the same value as the DEFAULT_PAGINATION_CLASS setting, which is 'rest_framework.pagination.PageNumberPagination'.
+    Setting pagination_class=None will disable pagination on this view.
+    """
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 
